@@ -44,7 +44,7 @@ function reportData(){
   const P=[];
   P.push(`This letter summarizes a preliminary zoning and site review of ${addr}${a.PROPERTY_NUM?` (roll number ${a.PROPERTY_NUM})`:""}. The lot measures about ${fmt(G.lotArea)} m² (${fmt(G.lotArea*10.7639)} ft²) with a ${fmt(front,1)} m front lot line, and is zoned ${S.zone.code||"?"} (${zoneName})${parent?` under Zoning By-law ${parent}`:""}.`);
   if(z&&z.restricted)P.push(`The ${S.zone.code} zone protects conservation or hazard land, and new buildings are generally not permitted.`);
-  else P.push(`Within the required setbacks, the zone allows building on about ${fmt(G.envArea)} m² of the lot (${fmt(G.envArea/G.lotArea*100)}%), up to a maximum height of ${fmt(R.height,1)} m.`);
+  else P.push(`Within the required setbacks, the zone allows building on about ${fmt(G.envArea)} m² of the lot (${fmt(G.envArea/G.lotArea*100)}%), up to a maximum height of ${fmt(R.height,1)} m.${necDCActive()?" The lot is in the Niagara Escarpment Area of Development Control, so these setbacks and this envelope are for information only. An NEC Development Permit governs what can be built.":""}`);
   if(E){const m=E.main;const f=failing(E.checks);
     P.push(`The existing ${m.accessory?"building":"main building"} covers ${fmt(m.area)} m² and stands about ${fmt(m.ridge,1)} m to the ridge (${m.src==="assumed"?"height assumed, not measured":"height as entered"}). Total building coverage is ${fmt(E.total/G.lotArea*100,1)}% of the lot. It ${f.length?`does not meet the ${f.join(", ")} requirement${f.length>1?"s":""}, which may reflect a legal non-conforming condition or a past variance`:`meets the ${tot(E.checks)} zoning checks applied`}.`)}
   else P.push("No existing building footprint is mapped on this lot.");
@@ -67,6 +67,7 @@ function reportData(){
   [1,2,3].forEach(i=>{if(za["EXCEPTION"+i])zoneRows.push([`Exception ${i}`,String(za["EXCEPTION"+i])]);if(za["HOLDING"+i])zoneRows.push([`Holding ${i}`,String(za["HOLDING"+i])])});
   if(za.BY_LAW_NUMBER)zoneRows.push(["Amending by-law",String(za.BY_LAW_NUMBER)]);
   if(S.zone.ca&&S.zone.attrs)zoneRows.push(["Council-approved zone (also applies)",String(S.zone.ca.ZONING_CODE)]);
+  if(necDCActive())zoneRows.push(["Niagara Escarpment","Area of Development Control: setbacks and envelope are information only; an NEC Development Permit governs"]);
   const regRows=[["front","Front yard","m"],["side","Side yard","m"],["flank","Flankage yard","m"],["rear","Rear yard","m"],["height","Maximum height","m"],["coverage","Maximum lot coverage","%"],["landscaped","Minimum landscaped area","%"],["sideAgg","Aggregate side yards","m"],["lotArea","Minimum lot area","m²"],["lotAreaPerUnit","Minimum lot area per unit","m²"],["lotWidth","Minimum lot width","m"],["lotWidthPerUnit","Minimum lot width per unit","m"],["unitWidth","Minimum unit width","m"]]
     .filter(([k])=>R[k]!=null&&!/^(lotArea|lotAreaPerUnit|lotWidth|lotWidthPerUnit|unitWidth)$/.test(k)).map(([k,l,u])=>[l,`${fmt(R[k],k==="lotArea"||k==="lotAreaPerUnit"?0:1)} ${u}`,k in S.edited?"Changed for testing":(R.ref==="assumed"?"Assumed":`s. ${R.ref}`)]);
   const existRows=E?S.buildings.map((b,i)=>[`${b.accessory?"Accessory":"Main"} building ${i+1}`,`${M2(b.area)} · eave ${M(b.eave)} · ridge ${M(b.ridge)}`,b.src==="assumed"?"Height assumed":"Height entered"]):[];

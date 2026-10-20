@@ -46,8 +46,8 @@
         <button type="button" role="tab" id="tab-rules" aria-controls="pane-rules" aria-selected="false" data-tab="rules" tabindex="-1">Rules</button>
         <button type="button" role="tab" id="tab-law" aria-controls="pane-law" aria-selected="false" data-tab="law" tabindex="-1">Applicable law <span class="bd" id="bd-law" hidden></span></button>
         <button type="button" role="tab" id="tab-building" aria-controls="pane-building" aria-selected="false" data-tab="building" tabindex="-1">Building <span class="bd" id="bd-building" hidden></span></button>
-        <button type="button" role="tab" id="tab-section4" aria-controls="pane-section4" aria-selected="false" data-tab="section4" tabindex="-1">Section 4 <span class="bd" id="bd-section4" hidden></span></button>
-        <button type="button" role="tab" id="tab-section5" aria-controls="pane-section5" aria-selected="false" data-tab="section5" tabindex="-1">Section 5 <span class="bd" id="bd-section5" hidden></span></button>
+        <button type="button" role="tab" id="tab-section4" aria-controls="pane-section4" aria-selected="false" data-tab="section4" tabindex="-1">General provisions <span class="bd" id="bd-section4" hidden></span></button>
+        <button type="button" role="tab" id="tab-section5" aria-controls="pane-section5" aria-selected="false" data-tab="section5" tabindex="-1">Parking <span class="bd" id="bd-section5" hidden></span></button>
         <button type="button" role="tab" id="tab-report" aria-controls="pane-report" aria-selected="false" data-tab="report" tabindex="-1">Report</button>
       </div>
 
@@ -135,7 +135,7 @@
 
     <main class="stage">
       <div class="view" id="v3d">
-        <div class="overlay tl"><span class="tag example" id="exampleTag">Example lot · search an address to begin</span></div>
+        <div class="overlay tl"><span class="tag example" id="exampleTag">Example lot · search an address to begin</span><span class="tag example" id="necTag3d" hidden>Setbacks are information only · NEC Development Permit governs</span></div>
         <div class="overlay tr">
           <button class="vbtn" type="button" data-cam="iso">Iso</button>
           <button class="vbtn" type="button" data-cam="street">Street</button>
@@ -154,7 +154,7 @@
       <div class="bottom">
         <div class="view"><div id="map"></div></div>
         <div class="view"><svg id="plan" role="img" aria-label="Plan view of lot, setbacks and existing buildings"></svg>
-          <div class="overlay tl"><span class="tag">Plan · tap a lot line to change its type</span></div></div>
+          <div class="overlay tl"><span class="tag">Plan · tap a lot line to change its type</span><span class="tag example" id="necTagPlan" hidden>Setbacks are information only · NEC Development Permit governs</span></div></div>
       </div>
     </main>
   </div>

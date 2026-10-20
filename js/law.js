@@ -73,7 +73,7 @@ async function runLawReview(){
   const keys=Object.keys(OVERLAYS);
   const results=await Promise.all(keys.map(k=>overlayQuery(k).then(r=>[k,r]).catch(e=>[k,{error:e.message}])));
   if(token!==S.lookupId)return; // a newer lookup started
-  S.law={state:"done",res:Object.fromEntries(results)};renderLaw();
+  S.law={state:"done",res:Object.fromEntries(results)};renderLaw();try{renderSidebar(compute())}catch(e){console.error(e)} // refresh Rules, Section 4 and Parking, which read the law result
 }
 function lawItems(){
   const z=zoneDef(),za=S.zone.attrs||{},R=S.law&&S.law.res||{};
@@ -128,7 +128,11 @@ function lawItems(){
   items.push({s:"applies",t:"Building permit",d:`New buildings, additions and most structural work need a building permit under the ${L(LAW_LINKS.bca,"Building Code Act, 1992")} and the Ontario Building Code. Zoning and any NEC, conservation or heritage permits above must be in place first.`});
   return items;
 }
+/* True once the law review has finished and the lot is in the NEC Area of Development Control, where an NEC Development Permit governs and zoning setbacks are for information only. */
+function necDCActive(){const r=S.law&&S.law.state==="done"?S.law.res:null;return !!(r&&r.necDC&&!r.necDC.error&&r.necDC.feats.length)}
+function renderNecTag(){const on=necDCActive();["necTag3d","necTagPlan"].forEach(id=>{const el=$(id);if(el)el.hidden=!on})}
 function renderLaw(){
+  renderNecTag();
   const ul=$("law"),ban=$("lawBanner");
   if(S.example){setBadge("law",0);ul.innerHTML=`<li><span class="pill info law">INFO</span><span class="lt">Search an address</span><span class="ld">The review checks the real lot against the Niagara Escarpment Commission map and the City's heritage, conservation and policy layers.</span></li>`;ban.hidden=true;return}
   if(!S.law||S.law.state==="busy"){setBadge("law",0);ul.innerHTML=`<li><span class="pill info law">…</span><span class="lt">Checking provincial and City layers</span><span class="ld">Niagara Escarpment, conservation authority, heritage, Greenbelt, interim control, secondary plans, source water and airport noise.</span></li>`;ban.hidden=true;return}

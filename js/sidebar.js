@@ -32,6 +32,7 @@ function renderSidebar(G){
 
   const R=S.regs;
   $("regref").textContent=R.ref&&R.ref!=="assumed"?`· s. ${R.ref}${S.dtype==="single"&&zoneDef()&&/^R/.test(S.zone.key)?" (single detached)":""}`:"· assumed";
+  if(necDCActive())$("regref").textContent+=" · information only, NEC permit governs";
   const rows=[
     ["front","Front yard setback","m","var(--setback)"],["side","Side yard setback","m","var(--setback)"],
     ["flank","Flankage (corner) setback","m","var(--setback)"],["rear","Rear yard setback","m","var(--setback)"],
@@ -47,6 +48,7 @@ function renderSidebar(G){
   renderParking(G);
   const notes=[...(z&&z.notes||[])];
   if(z&&z.restricted)notes.unshift(`This land is zoned for conservation or hazard protection. See Section ${z.section} and consult the Conservation Authority before planning any building.`);
+  if(necDCActive())notes.unshift("This lot is in the Niagara Escarpment Area of Development Control. The setbacks below are zoning values shown for information only. An NEC Development Permit decides what can be built here.");
   if(!z)notes.unshift("This zone is not one of the 05-200 zones loaded here (or it falls under a former municipal by-law). The setbacks shown are placeholders.");
   notes.push("Setbacks are drawn as true distances from each lot line. Permitted encroachments (porches, eaves, steps) under Section 4 are not shown.");
   $("notes").innerHTML=notes.map(n=>`<p style="margin:0 0 6px">${n}</p>`).join("");
