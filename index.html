@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Look up zoning, lot lines, setbacks, applicable law and existing building checks for any Hamilton, Ontario property under Zoning By-law 05-200.">
+<title>Hamilton Property Zoning</title>
+<link rel="icon" type="image/png" href="assets/logo-mark-forest.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <img class="logo-light" src="assets/logo-mark-forest.png" alt="">
+      <img class="logo-dark" src="assets/logo-mark-white.png" alt="">
+      <div><h1>Hamilton property zoning</h1><div class="sub">Zoning By-law 05-200</div></div>
+    </div>
+    <div class="search">
+      <input id="q" type="search" autocomplete="off" placeholder="Civic address, for example 25 Arkell St" aria-label="Property address">
+      <ul class="sugg" id="sugg" hidden></ul>
+    </div>
+    <button class="themebtn" id="themeBtn" type="button" aria-label="Switch to dark mode" title="Switch to dark mode">
+      <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1Z"/></svg>
+      <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+    </button>
+  </header>
+
+  <div class="workspace">
+    <section class="panel" aria-label="Property report">
+      <div class="panel-head">
+        <div class="zonebadge" id="zbadge">R1</div>
+        <div class="zonemeta"><div class="addr" id="sumAddr">Example lot</div><div id="zmeta"></div></div>
+      </div>
+      <div class="status" id="status" role="status"></div>
+
+      <div class="tabs" role="tablist" aria-label="Report sections">
+        <button type="button" role="tab" id="tab-site" aria-controls="pane-site" aria-selected="true" data-tab="site">Site</button>
+        <button type="button" role="tab" id="tab-rules" aria-controls="pane-rules" aria-selected="false" data-tab="rules" tabindex="-1">Rules</button>
+        <button type="button" role="tab" id="tab-law" aria-controls="pane-law" aria-selected="false" data-tab="law" tabindex="-1">Applicable law <span class="bd" id="bd-law" hidden></span></button>
+        <button type="button" role="tab" id="tab-building" aria-controls="pane-building" aria-selected="false" data-tab="building" tabindex="-1">Building <span class="bd" id="bd-building" hidden></span></button>
+        <button type="button" role="tab" id="tab-section4" aria-controls="pane-section4" aria-selected="false" data-tab="section4" tabindex="-1">Section 4 <span class="bd" id="bd-section4" hidden></span></button>
+        <button type="button" role="tab" id="tab-report" aria-controls="pane-report" aria-selected="false" data-tab="report" tabindex="-1">Report</button>
+      </div>
+
+      <div class="panes">
+        <div role="tabpanel" id="pane-site" aria-labelledby="tab-site">
+          <div class="group">
+            <h2>Lot</h2>
+            <dl class="facts" id="facts"></dl>
+            <p class="hint">Search an address above, or click any lot on the map.</p>
+          </div>
+          <div class="group">
+            <h2>Zone and by-law</h2>
+            <div class="chips" id="zchips"></div>
+          </div>
+          <div class="group">
+            <h2>Look around</h2>
+            <div class="chips" id="gLinks"></div>
+          </div>
+          <p class="disclaimer">Lot lines, zoning and dimensions come from City of Hamilton open GIS services and are approximate. Site-specific exceptions, holding provisions, general provisions (Section 4) and special figures can change these limits. Confirm with a Zoning Verification Certificate before relying on any result.</p>
+        </div>
+
+        <div role="tabpanel" id="pane-rules" aria-labelledby="tab-rules" hidden>
+          <div class="group">
+            <h2>Regulations applied <span class="ref" id="regref"></span></h2>
+            <table class="regs" id="regs"></table>
+            <p class="hint">These are the limits the existing building is checked against. Edit a value to test a variance. Click a lot line in the plan to change whether it is front, side, flankage or rear.</p>
+            <div class="note" id="notes"></div>
+          </div>
+        </div>
+
+        <div role="tabpanel" id="pane-law" aria-labelledby="tab-law" hidden>
+          <div class="group">
+            <h2>Applicable law review</h2>
+            <div class="note" id="lawBanner" hidden></div>
+            <ul class="law" id="law"></ul>
+          </div>
+        </div>
+
+        <div role="tabpanel" id="pane-building" aria-labelledby="tab-building" hidden>
+          <div class="group">
+            <h2>Existing building</h2>
+            <dl class="facts" id="exist"></dl>
+            <table class="regs" id="existHt"></table>
+            <p class="note" id="htNote">Adjust the eave and ridge heights to match the building. Measure on site, take them from drawings, or estimate from Street View (a storey is about 3 m (10′)). The 3D model, height check and report letter update when you change a value.</p>
+          </div>
+          <div class="group">
+            <h2>Checks against the zone</h2>
+            <ul class="checks" id="existChecks"></ul>
+          </div>
+        </div>
+
+        <div role="tabpanel" id="pane-section4" aria-labelledby="tab-section4" hidden>
+          <div class="group">
+            <h2>General provisions <span class="ref">Section 4, residential</span></h2>
+            <ul class="law" id="gp"></ul>
+            <details id="gpRefBox"><summary class="hint" style="cursor:pointer">Other Section 4 rules</summary><ul class="law" id="gpRef" style="margin-top:6px"></ul></details>
+          </div>
+        </div>
+
+        <div role="tabpanel" id="pane-report" aria-labelledby="tab-report" hidden>
+          <div class="group">
+            <h2>Report letter</h2>
+            <div class="ctrl"><label for="rpFor">Prepared for</label><input id="rpFor" type="text" class="tin" placeholder="Client name"></div>
+            <div class="ctrl"><label for="rpBy">Prepared by</label><input id="rpBy" type="text" class="tin" placeholder="Vanderlinde Design"></div>
+            <div class="ctrl"><label for="rpFirm">Firm</label><input id="rpFirm" type="text" class="tin" placeholder="Vanderlinde Design"></div>
+            <div class="ctrl"><label for="rpFile">File no.</label><input id="rpFile" type="text" class="tin" placeholder="Optional"></div>
+            <div class="btnrow">
+              <button class="vbtn primary" id="exPdf" type="button">Open letter · save as PDF</button>
+              <button class="vbtn" id="exDocx" type="button">Download Word</button>
+            </div>
+            <div class="status" id="exStatus"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <main class="stage">
+      <div class="view" id="v3d">
+        <div class="overlay tl"><span class="tag example" id="exampleTag">Example lot · search an address to begin</span></div>
+        <div class="overlay tr">
+          <button class="vbtn" type="button" data-cam="iso">Iso</button>
+          <button class="vbtn" type="button" data-cam="street">Street</button>
+          <button class="vbtn" type="button" data-cam="top">Top</button>
+        </div>
+        <div class="overlay br"><span class="tag hint3d" id="hint3d">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M21 4v5h-5"/></svg>
+          <span id="hint3dText">Drag to rotate · Scroll to zoom · Right-drag to pan</span></span></div>
+        <div class="overlay bl legend">
+          <span><i class="swatch" style="background:var(--lot)"></i>Lot</span>
+          <span><i class="swatch" style="background:var(--setback)"></i>Required setbacks</span>
+          <span><i class="swatch" style="background:var(--zone)"></i>Buildable envelope to max height</span>
+          <span><i class="swatch" style="background:var(--exist);box-shadow:inset 0 0 0 1px var(--ink-2)"></i>Existing building</span>
+        </div>
+      </div>
+      <div class="bottom">
+        <div class="view"><div id="map"></div></div>
+        <div class="view"><svg id="plan" role="img" aria-label="Plan view of lot, setbacks and existing buildings"></svg>
+          <div class="overlay tl"><span class="tag">Plan · tap a lot line to change its type</span></div></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div class="hud" id="hud" role="status" aria-live="polite" hidden>
+  <div class="hud-card">
+    <div class="spinner" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="hud-msg" id="hudMsg">Loading…</div>
+  </div>
+</div>
+<noscript><p style="padding:24px">This tool needs JavaScript.</p></noscript>
+
+<!-- Libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/esri-leaflet@3.0.12/dist/esri-leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/clipper-lib@6.4.2/clipper.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.147.0/examples/js/controls/OrbitControls.js"></script>
+
+<!-- Application, in dependency order -->
+<script src="js/config.js"></script>      <!-- services, zones, dwelling types -->
+<script src="js/format.js"></script>      <!-- metric and imperial formatting -->
+<script src="js/geometry.js"></script>    <!-- geometry helpers, lot-line grouping, Clipper wrappers -->
+<script src="js/gis.js"></script>         <!-- ArcGIS REST calls with JSONP fallback -->
+<script src="js/state.js"></script>       <!-- shared state and the example lot -->
+<script src="js/lookup.js"></script>      <!-- address search and parcel lookup -->
+<script src="js/lot.js"></script>         <!-- lot-line types, regulations, buildable envelope -->
+<script src="js/law.js"></script>         <!-- applicable law review -->
+<script src="js/provisions.js"></script>  <!-- Section 4 general provisions -->
+<script src="js/buildings.js"></script>   <!-- existing buildings and checks -->
+<script src="js/sidebar.js"></script>     <!-- panel rendering -->
+<script src="js/plan.js"></script>        <!-- SVG plan view -->
+<script src="js/map.js"></script>         <!-- Leaflet map -->
+<script src="js/scene3d.js"></script>     <!-- three.js model -->
+<script src="js/report.js"></script>      <!-- PDF letter and Word export -->
+<script src="js/tabs.js"></script>        <!-- tab navigation -->
+<script src="js/app.js"></script>         <!-- render loop, theme, boot -->
+</body>
+</html>
