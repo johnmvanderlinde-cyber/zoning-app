@@ -1,0 +1,42 @@
+/* Vanderlinde Design tokens: Forest and Deep Pine on Cream. No pure black, no pure white. */
+@font-face{font-family:"Editors Note";src:url("../fonts/EditorsNote-Regular-iF664322be6e849.otf") format("opentype");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url("../fonts/JetBrainsMono-Medium.ttf") format("truetype");font-weight:500;font-style:normal;font-display:swap}
+
+:root{
+  /* surfaces and text */
+  --paper:#F4EFE6; --sheet:#FAF7F2; --fill:#E8DFD0; --ink:#2A3A2E; --ink-2:#566151;
+  --rule:#D9D0BF; --hair:rgba(35,40,31,.12);
+  --accent:#3D4F3A; --accent-soft:rgba(61,79,58,.10); --on-accent:#FAF7F2;
+  /* drawing colours read by the plan, map and 3D scene */
+  --zone:#C89B4A; --setback:#B05E3B; --lot:#DCE3CB; --bldg:#FAF7F2; --roof:#8C8473;
+  --exist:#D8CFBE; --exist-roof:#8C8473; --ground:#E8DFD0;
+  /* status */
+  --ok:#5C6E4F; --warn:#C89B4A; --bad:#B05E3B; --grey:#6B665A; --on-pill:#FAF7F2; --on-warn:#2A3A2E;
+  --shadow:0 1px 2px rgba(42,58,46,.06),0 6px 20px rgba(42,58,46,.07);
+  --logo-light:block; --logo-dark:none;
+  /* type */
+  --f-display:"Editors Note",Georgia,"Times New Roman",serif;
+  --f-body:"Inter Tight",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --radius:8px; --radius-lg:12px;
+  --ease:cubic-bezier(.2,.6,.2,1);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#1B251E; --sheet:#26352A; --fill:#33463A; --ink:#F4EFE6; --ink-2:#B9BDAA;
+  --rule:#3F5144; --hair:rgba(244,239,230,.14);
+  --accent:#A9BC8A; --accent-soft:rgba(169,188,138,.16); --on-accent:#1B251E;
+  --zone:#D9B45F; --setback:#D77F5C; --lot:#34472F; --bldg:#E8DFD0; --roof:#8C8473;
+  --exist:#6B7466; --exist-roof:#3C463A; --ground:#202C24;
+  --ok:#8FA878; --warn:#D9B45F; --bad:#E08E6C; --grey:#A3A392; --on-pill:#17201A;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.28);
+  --logo-light:none; --logo-dark:block; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#1B251E; --sheet:#26352A; --fill:#33463A; --ink:#F4EFE6; --ink-2:#B9BDAA;
+  --rule:#3F5144; --hair:rgba(244,239,230,.14);
+  --accent:#A9BC8A; --accent-soft:rgba(169,188,138,.16); --on-accent:#1B251E;
+  --zone:#D9B45F; --setback:#D77F5C; --lot:#34472F; --bldg:#E8DFD0; --roof:#8C8473;
+  --exist:#6B7466; --exist-roof:#3C463A; --ground:#202C24;
+  --ok:#8FA878; --warn:#D9B45F; --bad:#E08E6C; --grey:#A3A392; --on-pill:#17201A;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 6px 20px rgba(0,0,0,.28);
+  --logo-light:none; --logo-dark:block; color-scheme:dark}
