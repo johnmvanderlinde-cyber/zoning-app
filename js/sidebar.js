@@ -44,6 +44,7 @@ function renderSidebar(G){
   renderExisting(G);
   renderLaw();
   renderProvisions(G);
+  renderParking(G);
   const notes=[...(z&&z.notes||[])];
   if(z&&z.restricted)notes.unshift(`This land is zoned for conservation or hazard protection. See Section ${z.section} and consult the Conservation Authority before planning any building.`);
   if(!z)notes.unshift("This zone is not one of the 05-200 zones loaded here (or it falls under a former municipal by-law). The setbacks shown are placeholders.");

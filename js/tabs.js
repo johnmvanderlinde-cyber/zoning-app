@@ -1,6 +1,6 @@
 "use strict";
 /* Tab navigation for the left panel. The active tab is kept in the URL hash (#law, #building...) so a view can be bookmarked. */
-const TAB_IDS=["site","rules","law","building","section4","report"];
+const TAB_IDS=["site","rules","law","building","section4","section5","report"];
 function showTab(id,focus){
   if(!TAB_IDS.includes(id))id="site";
   TAB_IDS.forEach(t=>{

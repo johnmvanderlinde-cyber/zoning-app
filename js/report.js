@@ -54,6 +54,8 @@ function reportData(){
   else P.push("The applicable law review had not finished when this letter was produced and should be rerun.");
   const GP=provisions(G);const gpBad=GP.C.filter(c=>c.s==="bad").map(c=>`${stripTags(c.t).toLowerCase()} (s. ${c.ref})`);
   if(GP.C.length)P.push(gpBad.length?`Under the general provisions in Section 4, the following need attention: ${gpBad.join("; ")}.`:"No conflicts with the measurable general provisions in Section 4 were found.");
+  const PK=parking(G);
+  if(PK.C.length)P.push("Parking requirements under Section 5 are listed in section 6 below. They follow the City's August 2026 posting of Section 5, which is marked not final, and the required number of spaces depends on the lot's Parking Rate Area.");
   const edited=Object.keys(S.edited);
   const RN={front:"front yard",side:"side yard",flank:"flankage yard",rear:"rear yard",height:"maximum height",coverage:"lot coverage",landscaped:"landscaped area",sideAgg:"aggregate side yards",lotArea:"minimum lot area",lotAreaPerUnit:"lot area per unit",lotWidth:"lot width",lotWidthPerUnit:"lot width per unit",unitWidth:"unit width"};
   if(edited.length)P.push(`Note: these regulations were changed from the by-law values to test a possible variance: ${edited.map(k=>`${RN[k]||k} (${fmt(R[k],1)})`).join(", ")}.`);
@@ -73,9 +75,11 @@ function reportData(){
     summary:P,propRows,zoneRows,regRows,law,existRows,existChecks:E?toCheckRows(E.checks):[],
     gpRows:GP.C.map(c=>[`s. ${c.ref} · ${stripTags(c.t)}`,stripTags(c.v),GP_WORD[c.s]]),
     gpRefRows:GP.X.map(c=>[`s. ${c.ref} · ${c.t}`,c.v]),
+    pkRows:PK.C.map(c=>[`s. ${c.ref} · ${stripTags(c.t)}`,stripTags(c.v),GP_WORD[c.s]]),
+    pkRefRows:PK.X.map(c=>[`s. ${c.ref} · ${c.t}`,stripTags(c.v)]),
     sources:["City of Hamilton open GIS: property parcels, Zoning By-law 05-200 zoning boundaries, building footprints, railways, 2017 contours, policy planning and heritage layers (spatialsolutions.hamilton.ca).",
       "Province of Ontario, Land Information Ontario: Niagara Escarpment Commission map service (Area of Development Control, Plan areas and designations).",
-      "City of Hamilton Zoning By-law 05-200, sections supplied for review (Sections 1–5, 7.5–7.8, 12.1–12.3, 15.1–15.3, Schedule D)."]};
+      "City of Hamilton Zoning By-law 05-200, sections supplied for review (Sections 1–5, 7.5–7.8, 12.1–12.3, 15.1–15.3, Schedule D). Section 5 (Parking) is taken from the City's August 2026 posting, marked not final."]};
 }
 
 const reAddr=a=>/hamilton|,\s*ON\b/i.test(a)?a:a+", Hamilton, Ontario";
@@ -133,9 +137,12 @@ ${D.summary.map(t=>`<p>${esc(t)}</p>`).join("")}
 <h2>4. Existing building</h2>${D.existRows.length?tbl(D.existRows,["Building","Footprint and height","Source"])+tbl(D.existChecks,["Check","Measured","Result"]):"<p>No existing building footprint is mapped on this lot.</p>"}
 <h2>5. General provisions (Section 4, residential)</h2>${D.gpRows.length?tbl(D.gpRows,["Provision","Finding","Status"]):"<p>No residential provisions were assessed.</p>"}
 <h3 style="font:600 10.5pt 'Inter Tight',sans-serif;margin:10px 0 2px">Other Section 4 rules that apply to residential lots</h3>${tbl(D.gpRefRows)}
-<h2>6. Figure</h2>
+<h2>6. Parking (Section 5, residential)</h2>${D.pkRows.length?tbl(D.pkRows,["Provision","Finding","Status"]):"<p>No residential parking provisions were assessed.</p>"}
+<h3 style="font:600 10.5pt 'Inter Tight',sans-serif;margin:10px 0 2px">Other Section 5 rules that apply to residential lots</h3>${tbl(D.pkRefRows)}
+<p class="small">Based on the City's August 2026 posting of Section 5, marked not final. Parts remain under appeal (OLT-24-000544) and the electric vehicle rates in 5.7.4 are not yet binding.</p>
+<h2>7. Figure</h2>
 ${F.planPng?`<figure><img src="${F.planPng}" alt="Plan of lot lines, setbacks and buildings"><figcaption>Figure 1. Plan of the lot: lot lines labelled by type with lengths and required setbacks in metres, setback areas hatched, buildable area in yellow, existing building footprint in grey.</figcaption></figure>`:""}
-<h2>7. Sources and limitations</h2>
+<h2>8. Sources and limitations</h2>
 <p class="small">${D.sources.map(esc).join(" ")}</p>
 <p class="small">This review is preliminary and relies on open map data, which may not match surveyed lot lines or current approvals. Site-specific exceptions, holding provisions, general provisions in Section 4 of the by-law, and special figures in Schedule F can change the limits shown. It is not a Zoning Verification Certificate, legal opinion or survey. Confirm zoning with the City of Hamilton, and Niagara Escarpment, conservation authority and heritage matters with the responsible agencies, before relying on these findings.</p>
 <div class="sig"><p>Sincerely,</p><div class="line">${esc(m.byWho||m.firm)}${m.byWho&&m.firm&&m.firm!==m.byWho?`<br>${esc(m.firm)}`:""}</div></div>
@@ -190,9 +197,13 @@ async function exportDocx(){
       h("5. General provisions (Section 4, residential)"),
       ...(D.gpRows.length?[table(D.gpRows,["Provision","Finding","Status"])]:[para("No residential provisions were assessed.")]),
       para("Other Section 4 rules that apply to residential lots",{bold:true,after:60}),table(D.gpRefRows),
-      h("6. Figure"),
+      h("6. Parking (Section 5, residential)"),
+      ...(D.pkRows.length?[table(D.pkRows,["Provision","Finding","Status"])]:[para("No residential parking provisions were assessed.")]),
+      para("Other Section 5 rules that apply to residential lots",{bold:true,after:60}),table(D.pkRefRows),
+      para("Based on the City's August 2026 posting of Section 5, marked not final. Parts remain under appeal (OLT-24-000544) and the electric vehicle rates in 5.7.4 are not yet binding.",{size:18,color:GREY,after:60}),
+      h("7. Figure"),
       ...(F.planPng?img(F.planPng,F.arPlan,"Figure 1. Plan of the lot: lot lines labelled by type with lengths and required setbacks in metres, setback areas hatched, buildable area in yellow, existing building footprint in grey."):[para("The plan figure could not be produced.")]),
-      h("7. Sources and limitations"),...D.sources.map(s=>para(s,{size:18,color:GREY,after:60})),
+      h("8. Sources and limitations"),...D.sources.map(s=>para(s,{size:18,color:GREY,after:60})),
       para("This review is preliminary and relies on open map data, which may not match surveyed lot lines or current approvals. Site-specific exceptions, holding provisions, general provisions in Section 4 of the by-law, and special figures in Schedule F can change the limits shown. It is not a Zoning Verification Certificate, legal opinion or survey. Confirm zoning with the City of Hamilton, and Niagara Escarpment, conservation authority and heritage matters with the responsible agencies, before relying on these findings.",{size:18,color:GREY}),
       para("Sincerely,",{after:600}),
       new Paragraph({children:[t(m.byWho||m.firm)],border:{top:{style:BorderStyle.SINGLE,size:6,color:INK,space:4}}}),

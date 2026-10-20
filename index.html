@@ -47,6 +47,7 @@
         <button type="button" role="tab" id="tab-law" aria-controls="pane-law" aria-selected="false" data-tab="law" tabindex="-1">Applicable law <span class="bd" id="bd-law" hidden></span></button>
         <button type="button" role="tab" id="tab-building" aria-controls="pane-building" aria-selected="false" data-tab="building" tabindex="-1">Building <span class="bd" id="bd-building" hidden></span></button>
         <button type="button" role="tab" id="tab-section4" aria-controls="pane-section4" aria-selected="false" data-tab="section4" tabindex="-1">Section 4 <span class="bd" id="bd-section4" hidden></span></button>
+        <button type="button" role="tab" id="tab-section5" aria-controls="pane-section5" aria-selected="false" data-tab="section5" tabindex="-1">Section 5 <span class="bd" id="bd-section5" hidden></span></button>
         <button type="button" role="tab" id="tab-report" aria-controls="pane-report" aria-selected="false" data-tab="report" tabindex="-1">Report</button>
       </div>
 
@@ -103,6 +104,15 @@
             <h2>General provisions <span class="ref">Section 4, residential</span></h2>
             <ul class="law" id="gp"></ul>
             <details id="gpRefBox"><summary class="hint" style="cursor:pointer">Other Section 4 rules</summary><ul class="law" id="gpRef" style="margin-top:6px"></ul></details>
+          </div>
+        </div>
+
+        <div role="tabpanel" id="pane-section5" aria-labelledby="tab-section5" hidden>
+          <div class="group">
+            <h2>Parking <span class="ref">Section 5, residential</span></h2>
+            <p class="note">Based on the City's August 2026 posting of Section 5, which is marked "not final". Parts remain under appeal and the electric vehicle rates are not yet binding. Confirm against the in-force by-law.</p>
+            <ul class="law" id="pk"></ul>
+            <details id="pkRefBox"><summary class="hint" style="cursor:pointer">Other Section 5 rules</summary><ul class="law" id="pkRef" style="margin-top:6px"></ul></details>
           </div>
         </div>
 
@@ -176,6 +186,7 @@
 <script src="js/lot.js"></script>         <!-- lot-line types, regulations, buildable envelope -->
 <script src="js/law.js"></script>         <!-- applicable law review -->
 <script src="js/provisions.js"></script>  <!-- Section 4 general provisions -->
+<script src="js/parking.js"></script>     <!-- Section 5 parking -->
 <script src="js/buildings.js"></script>   <!-- existing buildings and checks -->
 <script src="js/sidebar.js"></script>     <!-- panel rendering -->
 <script src="js/plan.js"></script>        <!-- SVG plan view -->

@@ -18,7 +18,7 @@ It must be served over https. Opening `index.html` from disk also works for tryi
 - `js/config.js`: service URLs, By-law 05-200 zones and dwelling types
 - `js/gis.js`, `js/lookup.js`: network calls, address search, parcel lookup
 - `js/lot.js`, `js/buildings.js`: lot lines, setbacks, envelope, existing building checks
-- `js/law.js`, `js/provisions.js`: applicable law review and Section 4 rules
+- `js/law.js`, `js/provisions.js`, `js/parking.js`: applicable law review, Section 4 rules and Section 5 parking rules (from the City's August 2026 posting, marked not final)
 - `js/sidebar.js`, `js/tabs.js`: panel rendering and tabs
 - `js/plan.js`, `js/map.js`, `js/scene3d.js`: plan, map and 3D views
 - `js/report.js`: PDF letter and Word export
